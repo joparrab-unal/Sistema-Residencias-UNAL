@@ -3,6 +3,9 @@ public class SistemasResidencias{
   MinHeapPrioridad hep;
   int cuposDisponibles;
 
-  
+  public SistemasResidencias(in cupos){
+    tabla = new;
+  TablaHashEstudiantes();
+    
 
 
