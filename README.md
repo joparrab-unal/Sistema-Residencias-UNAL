@@ -18,15 +18,3 @@ Funcionalidades
 -Modificacion de puntaje
 -Eliminacion de estudiantes 
 
-Estructura de Proyecto 
-
-Sistema-Residencias-UNAL/
-│
-├── README.md
-│
-├── src/
-    ├── Estudiante.java
-    ├── TablaHashEstudiantes.java
-    ├── MinHeapPrioridad.java
-    └── SistemaResidencias.java
-
