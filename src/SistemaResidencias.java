@@ -6,6 +6,7 @@ public class SistemasResidencias{
   public SistemasResidencias(in cupos){
     tabla = new;
   TablaHashEstudiantes();
-    
-
-
+    heap = new MinHeapPrioridad();
+    cuposDisponibles = cupos;
+  }
+}
