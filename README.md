@@ -18,3 +18,7 @@ Funcionalidades
 -Modificacion de puntaje
 -Eliminacion de estudiantes 
 
+Lenguajes Usados
+Java
+
+
