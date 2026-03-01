@@ -9,16 +9,16 @@ Integrantes
 - Sergio Quiroga Sandoval
 
 Estructura de datos utilizada 
--Tabla Hash para acceso directo a estudiantes por ID
--Cola de prioridad para obtener estudiantes por puntajes socioeconomicos 
+- Tabla Hash para acceso directo a estudiantes por ID
+- Cola de prioridad para obtener estudiantes por puntajes socioeconomicos 
 
 Funcionalidades 
--Registro de Estudiantes
--Definicion de cupos disponibles
--Asignacion prioritaria de cupos
--Consultar por ID
--Modificacion de puntaje
--Eliminacion de estudiantes 
+- Registro de Estudiantes
+- Definicion de cupos disponibles
+- Asignacion prioritaria de cupos
+- Consultar por ID
+- Modificacion de puntaje
+- Eliminacion de estudiantes 
 
 Lenguajes Usados
 Java
