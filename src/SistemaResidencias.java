@@ -3,7 +3,7 @@ public class SistemasResidencias{
   MinHeapPrioridad hep; //Organiza a los estudiantes degun su puntaje socioeconómico 
   int cuposDisponibles;
 
-  public SistemasResidencias(in cupos){
+  public SistemasResidencias(int cupos){
     tabla = new;
   TablaHashEstudiantes();
     heap = new MinHeapPrioridad();
