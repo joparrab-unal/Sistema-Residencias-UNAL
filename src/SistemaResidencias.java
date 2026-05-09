@@ -13,14 +13,19 @@ public class SistemaResidencias {
         this.noAsignados = new ColaEstudiantes();
     }
 
-    public void registrarEstudiante(int id, String nombre, double puntaje) {
-        arbolPrioridad.insertar(id, nombre, puntaje);
+    public boolean registrarEstudiante(int id, String nombre, double puntaje) {
+        if (arbolBusqueda.buscar(id) != null) return false;
         arbolBusqueda.insertar(id, nombre, puntaje);
+        arbolPrioridad.insertar(id, nombre, puntaje);
+        return true;
     }
 
     public void registrarConMensaje(int id, String nombre, double puntaje) {
-        registrarEstudiante(id, nombre, puntaje);
-        System.out.println("Registrado con exito: " + nombre + " (ID: " + id + ")");
+        if (registrarEstudiante(id, nombre, puntaje)) {
+            System.out.println("Registrado con exito: " + nombre + " (ID: " + id + ")");
+        } else {
+            System.out.println("Error: Ya existe un estudiante con ID " + id + ".");
+        }
     }
 
     public void consultarPorID(int id) {
