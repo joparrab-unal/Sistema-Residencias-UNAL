@@ -89,9 +89,22 @@ public class ArbolAVLPrioridad {
         return minimo;
     }
 
+    public NodoAVL extraerMaximo() {
+        if (raiz == null) return null;
+        NodoAVL maximo = encontrarMaximo(raiz);
+        raiz = eliminarNodo(raiz, maximo.puntaje, maximo.id);
+        return maximo;
+    }
+
     private NodoAVL encontrarMinimo(NodoAVL nodo) {
         NodoAVL actual = nodo;
         while (actual.izquierdo != null) actual = actual.izquierdo;
+        return actual;
+    }
+
+    private NodoAVL encontrarMaximo(NodoAVL nodo) {
+        NodoAVL actual = nodo;
+        while (actual.derecho != null) actual = actual.derecho;
         return actual;
     }
 
