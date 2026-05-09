@@ -13,6 +13,7 @@ public class Main {
             System.out.println("3. Eliminar estudiante");
             System.out.println("4. Asignar cupos");
             System.out.println("5. Generar datos aleatorios");
+            System.out.println("6. Ver estado de asignaciones");
             System.out.println("0. Salir");
             System.out.println("==========================================");
             System.out.print("Opcion: ");
@@ -48,6 +49,9 @@ public class Main {
                     System.out.print("Cuantos estudiantes generar? ");
                     int cantidad = sc.nextInt();
                     sistema.generarDatosAleatorios(cantidad);
+                    break;
+                case 6:
+                    sistema.mostrarEstado();
                     break;
                 case 0:
                     System.out.println("Saliendo del sistema...");
