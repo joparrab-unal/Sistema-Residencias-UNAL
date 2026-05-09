@@ -1,20 +1,3 @@
-class NodoAVL {
-    int id;
-    String nombre;
-    double puntaje;
-    int altura;
-    NodoAVL izquierdo, derecho;
-
-    public NodoAVL(int id, String nombre, double puntaje) {
-        this.id = id;
-        this.nombre = nombre;
-        this.puntaje = puntaje;
-        this.altura = 1;
-    }
-}
-
-public class ArbolAVLPrioridad {
-    private NodoAVL raiz;
 
     private int altura(NodoAVL n) {
         return (n == null) ? 0 : n.altura;
