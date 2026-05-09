@@ -1,4 +1,6 @@
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Benchmarks {
     public static void main(String[] args) {
@@ -10,6 +12,7 @@ public class Benchmarks {
         System.out.println("=======================================================================");
         System.out.println("         BENCHMARKS DE RENDIMIENTO - SISTEMA DE RESIDENCIAS");
         System.out.println("=======================================================================");
+        System.out.println("IDs aleatorios (no secuenciales) para evitar degeneracion del BST.");
         System.out.println("Operaciones rapidas promediadas sobre " + repeticiones + " ejecuciones.\n");
 
         System.out.printf("%-10s | %-15s | %-18s | %-18s | %-15s%n",
@@ -17,20 +20,24 @@ public class Benchmarks {
         System.out.println("-----------------------------------------------------------------------");
 
         for (int n : tamanos) {
-            SistemaResidencias sistema = new SistemaResidencias();
             Random rand = new Random(42);
 
+            ArrayList<Integer> ids = new ArrayList<>(n);
+            for (int i = 1; i <= n; i++) ids.add(i);
+            Collections.shuffle(ids, rand);
+
+            SistemaResidencias sistema = new SistemaResidencias();
             long inicio = System.nanoTime();
-            for (int i = 1; i <= n; i++) {
+            for (int i = 0; i < n; i++) {
                 String nombre = nombres[rand.nextInt(nombres.length)];
-                double puntaje = rand.nextDouble() * 100.0;
-                sistema.registrarEstudiante(i, nombre, puntaje);
+                double puntaje = rand.nextDouble() * 5.0;
+                sistema.registrarEstudiante(ids.get(i), nombre, puntaje);
             }
             long tiempoInsercion = System.nanoTime() - inicio;
 
             long sumaBusqueda = 0;
             for (int r = 0; r < repeticiones; r++) {
-                int idBuscar = rand.nextInt(n) + 1;
+                int idBuscar = ids.get(rand.nextInt(n));
                 inicio = System.nanoTime();
                 sistema.buscarPorID(idBuscar);
                 sumaBusqueda += System.nanoTime() - inicio;
@@ -39,19 +46,23 @@ public class Benchmarks {
 
             long sumaEliminacion = 0;
             for (int r = 0; r < repeticiones; r++) {
-                int idEliminar = n - r;
+                int idEliminar = ids.get(rand.nextInt(n));
                 inicio = System.nanoTime();
                 sistema.eliminarEstudianteSilencioso(idEliminar);
                 sumaEliminacion += System.nanoTime() - inicio;
             }
             double tiempoEliminacion = sumaEliminacion / (double) repeticiones;
 
-            SistemaResidencias sistemaAsignacion = new SistemaResidencias();
             Random rand2 = new Random(42);
-            for (int i = 1; i <= n; i++) {
+            ArrayList<Integer> ids2 = new ArrayList<>(n);
+            for (int i = 1; i <= n; i++) ids2.add(i);
+            Collections.shuffle(ids2, rand2);
+
+            SistemaResidencias sistemaAsignacion = new SistemaResidencias();
+            for (int i = 0; i < n; i++) {
                 String nombre = nombres[rand2.nextInt(nombres.length)];
-                double puntaje = rand2.nextDouble() * 100.0;
-                sistemaAsignacion.registrarEstudiante(i, nombre, puntaje);
+                double puntaje = rand2.nextDouble() * 5.0;
+                sistemaAsignacion.registrarEstudiante(ids2.get(i), nombre, puntaje);
             }
             inicio = System.nanoTime();
             sistemaAsignacion.asignarCuposSilencioso(n / 2);
@@ -67,10 +78,10 @@ public class Benchmarks {
 
         System.out.println("=======================================================================");
         System.out.println("us = microsegundos | ms = milisegundos");
-        System.out.println("\nComplejidades teoricas:");
-        System.out.println("  Insercion N elementos:   O(N log N) en AVL, O(N^2) peor caso BST");
-        System.out.println("  Busqueda por ID (BST):   O(N) peor caso (arbol degenerado)");
-        System.out.println("  Eliminacion (ambos):     O(log N) en AVL, O(N) peor caso BST");
+        System.out.println("\nComplejidades teoricas (BST balanceado con IDs aleatorios):");
+        System.out.println("  Insercion N elementos:   O(N log N) en AVL y BST");
+        System.out.println("  Busqueda por ID (BST):   O(log N) caso promedio");
+        System.out.println("  Eliminacion (ambos):     O(log N) en AVL y BST");
         System.out.println("  Asignacion K cupos:      O(K log N) via AVL");
         System.out.println("  Encolar (Cola):          O(1)");
     }
