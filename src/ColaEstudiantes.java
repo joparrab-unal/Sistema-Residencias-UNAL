@@ -44,6 +44,25 @@ public class ColaEstudiantes {
         }
     }
 
+    public boolean removerPorId(int id) {
+        if (frente == null) return false;
+        if (frente.estudiante.id == id) {
+            frente = frente.siguiente;
+            if (frente == null) fin = null;
+            return true;
+        }
+        NodoCola actual = frente;
+        while (actual.siguiente != null) {
+            if (actual.siguiente.estudiante.id == id) {
+                if (actual.siguiente == fin) fin = actual;
+                actual.siguiente = actual.siguiente.siguiente;
+                return true;
+            }
+            actual = actual.siguiente;
+        }
+        return false;
+    }
+
     public boolean estaVacia() {
         return frente == null;
     }
