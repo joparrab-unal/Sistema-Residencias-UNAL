@@ -3,10 +3,14 @@ import java.util.Random;
 public class SistemaResidencias {
     ArbolAVLPrioridad arbolPrioridad;
     ArbolBusquedaID arbolBusqueda;
+    ColaEstudiantes asignados;
+    ColaEstudiantes noAsignados;
 
     public SistemaResidencias() {
         this.arbolPrioridad = new ArbolAVLPrioridad();
         this.arbolBusqueda = new ArbolBusquedaID();
+        this.asignados = new ColaEstudiantes();
+        this.noAsignados = new ColaEstudiantes();
     }
 
     public void registrarEstudiante(int id, String nombre, double puntaje) {
@@ -40,9 +44,29 @@ public class SistemaResidencias {
             double puntajeParaBorrar = est.puntaje;
             arbolBusqueda.eliminar(id);
             arbolPrioridad.eliminarPorPuntaje(puntajeParaBorrar, id);
-            System.out.println("Estudiante " + est.nombre + " eliminado exitosamente de ambos registros.");
+            boolean teniaAsignacion = asignados.removerPorId(id);
+            noAsignados.removerPorId(id);
+            if (teniaAsignacion && !noAsignados.estaVacia()) {
+                NodoCola siguiente = noAsignados.desencolar();
+                asignados.encolar(siguiente.estudiante);
+                System.out.println("Cupo reasignado a: " + siguiente.estudiante.nombre + " (ID: " + siguiente.estudiante.id + ")");
+            }
+            System.out.println("Estudiante " + est.nombre + " eliminado exitosamente de todos los registros.");
         } else {
             System.out.println("No se pudo eliminar: El ID " + id + " no existe.");
+        }
+    }
+
+    private void reinyectarAlAVL() {
+        NodoCola nodo = asignados.desencolar();
+        while (nodo != null) {
+            arbolPrioridad.insertar(nodo.estudiante.id, nodo.estudiante.nombre, nodo.estudiante.puntaje);
+            nodo = asignados.desencolar();
+        }
+        nodo = noAsignados.desencolar();
+        while (nodo != null) {
+            arbolPrioridad.insertar(nodo.estudiante.id, nodo.estudiante.nombre, nodo.estudiante.puntaje);
+            nodo = noAsignados.desencolar();
         }
     }
 
@@ -61,11 +85,12 @@ public class SistemaResidencias {
         System.out.println(" INICIANDO ASIGNACION DE " + cuposDisponibles + " CUPOS");
         System.out.println("============================================");
 
-        ColaEstudiantes asignados = new ColaEstudiantes();
-        ColaEstudiantes noAsignados = new ColaEstudiantes();
+        reinyectarAlAVL();
+        asignados = new ColaEstudiantes();
+        noAsignados = new ColaEstudiantes();
 
         for (int i = 0; i < cuposDisponibles; i++) {
-            NodoAVL ganador = arbolPrioridad.extraerMinimo();
+            NodoAVL ganador = arbolPrioridad.extraerMaximo();
             if (ganador != null) {
                 asignados.encolar(ganador);
             } else {
@@ -73,10 +98,10 @@ public class SistemaResidencias {
             }
         }
 
-        NodoAVL perdedor = arbolPrioridad.extraerMinimo();
+        NodoAVL perdedor = arbolPrioridad.extraerMaximo();
         while (perdedor != null) {
             noAsignados.encolar(perdedor);
-            perdedor = arbolPrioridad.extraerMinimo();
+            perdedor = arbolPrioridad.extraerMaximo();
         }
 
         System.out.println(" ESTUDIANTES CON CUPO ASIGNADO:");
@@ -86,23 +111,42 @@ public class SistemaResidencias {
         System.out.println("============================================\n");
     }
 
+    public void mostrarEstado() {
+        System.out.println("\n============================================");
+        System.out.println(" ESTADO ACTUAL DEL SISTEMA");
+        System.out.println("============================================");
+        System.out.println(" ESTUDIANTES CON CUPO ASIGNADO:");
+        if (asignados.estaVacia()) {
+            System.out.println("  (ninguno)");
+        } else {
+            asignados.imprimirLista();
+        }
+        System.out.println(" ESTUDIANTES EN LISTA DE ESPERA:");
+        if (noAsignados.estaVacia()) {
+            System.out.println("  (ninguno)");
+        } else {
+            noAsignados.imprimirLista();
+        }
+        System.out.println("============================================\n");
+    }
+
     // Version sin impresion para mediciones de tiempo
     public void asignarCuposSilencioso(int cuposDisponibles) {
         ColaEstudiantes asignados = new ColaEstudiantes();
         ColaEstudiantes noAsignados = new ColaEstudiantes();
 
         for (int i = 0; i < cuposDisponibles; i++) {
-            NodoAVL ganador = arbolPrioridad.extraerMinimo();
+            NodoAVL ganador = arbolPrioridad.extraerMaximo();
             if (ganador != null) {
                 asignados.encolar(ganador);
             } else {
                 break;
             }
         }
-        NodoAVL perdedor = arbolPrioridad.extraerMinimo();
+        NodoAVL perdedor = arbolPrioridad.extraerMaximo();
         while (perdedor != null) {
             noAsignados.encolar(perdedor);
-            perdedor = arbolPrioridad.extraerMinimo();
+            perdedor = arbolPrioridad.extraerMaximo();
         }
     }
 
@@ -112,7 +156,7 @@ public class SistemaResidencias {
                             "Juan", "Laura", "Pedro", "Camila", "Andres"};
         for (int i = 1; i <= cantidad; i++) {
             String nombre = nombres[rand.nextInt(nombres.length)];
-            double puntaje = rand.nextDouble() * 100.0;
+            double puntaje = rand.nextDouble() * 5.0;
             registrarEstudiante(i, nombre, puntaje);
         }
         System.out.println("Se generaron " + cantidad + " estudiantes aleatorios.");
