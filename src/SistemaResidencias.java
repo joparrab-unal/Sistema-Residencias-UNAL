@@ -154,10 +154,13 @@ public class SistemaResidencias {
         Random rand = new Random();
         String[] nombres = {"Ana", "Luis", "Maria", "Carlos", "Sofia",
                             "Juan", "Laura", "Pedro", "Camila", "Andres"};
-        for (int i = 1; i <= cantidad; i++) {
+        java.util.ArrayList<Integer> ids = new java.util.ArrayList<>(cantidad);
+        for (int i = 1; i <= cantidad; i++) ids.add(i);
+        java.util.Collections.shuffle(ids, rand);
+        for (int i = 0; i < cantidad; i++) {
             String nombre = nombres[rand.nextInt(nombres.length)];
             double puntaje = rand.nextDouble() * 5.0;
-            registrarEstudiante(i, nombre, puntaje);
+            registrarEstudiante(ids.get(i), nombre, puntaje);
         }
         System.out.println("Se generaron " + cantidad + " estudiantes aleatorios.");
     }
